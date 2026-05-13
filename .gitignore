@@ -4,3 +4,4 @@ __pycache__/
 benchmark.db
 .env
 .pytest_cache/
+evobench.egg-info/
