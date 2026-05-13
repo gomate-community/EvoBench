@@ -25,6 +25,7 @@ line-length = 100
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--basetemp=.pytest_tmp"
 
 [build-system]
 requires = ["setuptools>=68", "wheel"]

@@ -4,4 +4,6 @@ __pycache__/
 benchmark.db
 .env
 .pytest_cache/
+.pytest_tmp/
 evobench.egg-info/
+data/samples.jsonl

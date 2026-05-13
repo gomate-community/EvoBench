@@ -42,7 +42,7 @@ class DocumentToAnswerSkill(DocumentSkillMixin):
                                     evidence_ids=[evidence.evidence_id],
                                 )
                             ],
-                            target_schema={"x": "answer"},
+                            target_schema=self.definition.output_schema,
                         ),
                         source_refs=[SourceReference.from_doc(doc, SOURCE_REF_REASON)],
                         evidence=[evidence],
