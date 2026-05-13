@@ -88,6 +88,14 @@ class ReviewPriority(str, Enum):
     critical = "critical"
 
 
+class ExperienceType(str, Enum):
+    fact = "fact"
+    strategy = "strategy"
+    mechanism = "mechanism"
+    boundary = "boundary"
+    failure = "failure"
+
+
 class SourceDocument(BaseModel):
     source_id: str
     title: str
@@ -181,6 +189,87 @@ class SampleOutput(BaseModel):
         return default
 
 
+class DocumentQuestionSampleSchema(BaseModel):
+    x: str = Field(description="A document-grounded question.")
+
+
+class DocumentAnswerSampleSchema(BaseModel):
+    x: str = Field(description="A document-grounded answer or summary span.")
+
+
+class DocumentQASampleSchema(BaseModel):
+    x: str = Field(description="A document-grounded question.")
+    y: str = Field(description="The answer supported by the source evidence.")
+
+
+class DocumentQAStepsSampleSchema(BaseModel):
+    x: str = Field(description="A document-grounded question.")
+    T: list[str] = Field(description="Concise external solution steps.")
+    y: str = Field(description="The final answer supported by the source evidence.")
+
+
+class ExperienceCard(BaseModel):
+    experience_type: ExperienceType
+    experience_title: str = Field(description="Short human-readable title of the experience.")
+    statement_nature: Literal[
+        "author_claim",
+        "evidence_supported_conclusion",
+        "mechanism_explanation",
+        "speculative_hypothesis",
+        "synthesized_summary",
+    ] = Field(
+        default="synthesized_summary",
+        description="How this statement should be interpreted relative to the paper's evidence and claims.",
+    )
+    experience_statement: str = Field(description="Core experience supported by the paper.")
+    applicability: str = Field(description="Conditions or scenarios where the experience applies.")
+    supporting_evidence: str = Field(default="", description="Direct evidence, experiment result, theorem, or observation supporting the experience.")
+    paper_location: str = Field(default="", description="Where in the paper the supporting evidence appears.")
+    is_verifiable: bool = Field(default=True, description="Whether the experience can be verified from the paper or by follow-up checks.")
+    verification_method: str = Field(default="", description="How the experience could be verified or falsified.")
+    possible_counterexample: str = Field(default="", description="Possible counterexample, failure condition, or invalidating setting.")
+    confidence: float = Field(default=0.5, ge=0, le=1, description="Confidence in the extracted experience.")
+    benchmark_transformable: bool = Field(default=False, description="Whether the experience can be converted into a benchmark task.")
+    actionable_advice: str = Field(description="Actionable recommendation for future tasks.")
+    caveats: str = Field(description="Boundary conditions, risks, or limitations.")
+
+
+class PaperExperienceSampleSchema(BaseModel):
+    x: str = Field(description="A future problem scenario that could reuse the paper experience.")
+    y: ExperienceCard
+
+
+class ErrorCorrectionDeltaSchema(BaseModel):
+    from_output: Any = Field(alias="from", description="The original incorrect output.")
+    to: Any = Field(description="The corrected output.")
+
+    model_config = {"populate_by_name": True}
+
+
+class ErrorCorrectedSampleSchema(BaseModel):
+    x: str = Field(description="Instruction asking the model to correct the error.")
+    y: Any = Field(description="Corrected output.")
+    correction: ErrorCorrectionDeltaSchema
+
+
+class ContrastivePreferenceSchema(BaseModel):
+    preferred: Any = Field(description="Preferred target output.")
+    rejected: Any = Field(description="Rejected incorrect output.")
+    error_type: str = Field(description="Type of error illustrated by the rejected output.")
+
+
+class ErrorContrastiveSampleSchema(BaseModel):
+    x: str = Field(description="Comparison prompt built from the error case.")
+    y: ContrastivePreferenceSchema
+    critique: str = Field(description="Explanation of why one output is preferred.")
+
+
+class ErrorBoundarySampleSchema(BaseModel):
+    x: str = Field(description="Boundary-condition instruction derived from the error.")
+    T: list[str] = Field(description="Short solution steps for safely handling the boundary case.")
+    y: Any = Field(description="Safe or abstaining output for the boundary case.")
+
+
 class ErrorSample(BaseModel):
     error_id: str
     input_text: str
@@ -225,6 +314,95 @@ class SkillDefinition(BaseModel):
     quality_rules: dict[str, Any] = Field(default_factory=dict)
     config: dict[str, Any] = Field(default_factory=dict)
     tags: list[str] = Field(default_factory=list)
+
+
+def build_output_schema(
+    *,
+    schema_name: str,
+    artifact_map: dict[str, Any],
+    model: type[BaseModel] | None = None,
+    description: str = "",
+    variants: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    schema: dict[str, Any] = {
+        "schema_name": schema_name,
+        "artifacts": artifact_map,
+    }
+    if description:
+        schema["description"] = description
+    if model is not None:
+        schema["json_schema"] = model.model_json_schema()
+    if variants:
+        schema["variants"] = variants
+    return schema
+
+
+DOC_TO_QUESTION_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="doc_to_question_sample",
+    artifact_map={"x": "question"},
+    model=DocumentQuestionSampleSchema,
+    description="Output schema for document-to-question samples.",
+)
+
+DOC_TO_ANSWER_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="doc_to_answer_sample",
+    artifact_map={"x": "answer"},
+    model=DocumentAnswerSampleSchema,
+    description="Output schema for document-to-answer samples.",
+)
+
+DOC_TO_QA_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="doc_to_qa_sample",
+    artifact_map={"x": "question", "y": "answer"},
+    model=DocumentQASampleSchema,
+    description="Output schema for document-grounded QA samples.",
+)
+
+DOC_TO_QA_STEPS_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="doc_to_qa_steps_sample",
+    artifact_map={"x": "question", "T": "solution_steps", "y": "answer"},
+    model=DocumentQAStepsSampleSchema,
+    description="Output schema for document-grounded QA samples with externalized steps.",
+)
+
+PAPER_TO_EXPERIENCE_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="paper_to_experience_sample",
+    artifact_map={"x": "future_problem", "y": "experience_card"},
+    model=PaperExperienceSampleSchema,
+    description="Output schema for transferable paper-experience samples.",
+)
+
+ERROR_TO_TRAINING_CORRECTED_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="error_to_training_corrected_sample",
+    artifact_map={"x": "instruction", "y": "corrected_answer", "correction": "correction_delta"},
+    model=ErrorCorrectedSampleSchema,
+    description="Corrected variant generated from an error sample.",
+)
+
+ERROR_TO_TRAINING_CONTRASTIVE_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="error_to_training_contrastive_sample",
+    artifact_map={"x": "comparison_prompt", "y": "preference_pair", "critique": "critique"},
+    model=ErrorContrastiveSampleSchema,
+    description="Contrastive preference variant generated from an error sample.",
+)
+
+ERROR_TO_TRAINING_BOUNDARY_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="error_to_training_boundary_sample",
+    artifact_map={"x": "boundary_instruction", "T": "solution_steps", "y": "safe_answer"},
+    model=ErrorBoundarySampleSchema,
+    description="Boundary-condition variant generated from an error sample.",
+)
+
+ERROR_TO_TRAINING_OUTPUT_SCHEMAS = build_output_schema(
+    schema_name="error_to_training_samples",
+    artifact_map={"variant": "corrected | contrastive | boundary"},
+    description="Variant-specific schemas for error-to-training-samples outputs.",
+    variants={
+        "corrected": ERROR_TO_TRAINING_CORRECTED_OUTPUT_SCHEMA,
+        "contrastive": ERROR_TO_TRAINING_CONTRASTIVE_OUTPUT_SCHEMA,
+        "boundary": ERROR_TO_TRAINING_BOUNDARY_OUTPUT_SCHEMA,
+    },
+)
 
 
 class UnifiedSample(BaseModel):

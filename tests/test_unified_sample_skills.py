@@ -25,7 +25,8 @@ async def test_document_to_qa_skill_outputs_unified_schema():
     assert sample.x
     assert sample.y
     assert sample.evidence
-    assert sample.output.target_schema == {"x": "question", "y": "answer"}
+    assert sample.output.target_schema["schema_name"] == "doc_to_qa_sample"
+    assert sample.output.target_schema["artifacts"] == {"x": "question", "y": "answer"}
 
 
 @pytest.mark.asyncio
@@ -65,9 +66,10 @@ async def test_paper_to_experience_skill_outputs_experience_cards():
     assert sample.task_type == TaskType.document_to_xy
     assert sample.x
     assert isinstance(sample.y, dict)
-    assert sample.y["experience_type"] in {"fact", "strategy", "cognitive"}
+    assert sample.y["experience_type"] in {"fact", "strategy", "mechanism", "boundary", "failure"}
     assert "actionable_advice" in sample.y
-    assert sample.output.target_schema == {"x": "future_problem", "y": "experience_card"}
+    assert sample.output.target_schema["schema_name"] == "paper_to_experience_sample"
+    assert sample.output.target_schema["artifacts"] == {"x": "future_problem", "y": "experience_card"}
 
 
 @pytest.mark.asyncio
@@ -95,7 +97,7 @@ async def test_paper_to_experience_supports_more_experiences_than_default_types(
     samples = await skill.generate(documents=[doc], limit=4)
     assert len(samples) == 4
     assert len({sample.sample_id for sample in samples}) == 4
-    assert all(sample.y["experience_type"] in {"fact", "strategy", "cognitive"} for sample in samples)
+    assert all(sample.y["experience_type"] in {"fact", "strategy", "mechanism", "boundary", "failure"} for sample in samples)
 
 
 def test_experience_to_qa_postprocessor_converts_experience_cards():
@@ -136,7 +138,10 @@ def test_experience_to_qa_postprocessor_converts_experience_cards():
                     },
                 ),
             ],
-            target_schema={"x": "future_problem", "y": "experience_card"},
+            target_schema={
+                "schema_name": "paper_to_experience_sample",
+                "artifacts": {"x": "future_problem", "y": "experience_card"},
+            },
         ),
         evidence=[evidence],
         verification_method=VerificationMethod.evidence_overlap,

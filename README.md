@@ -262,7 +262,9 @@ python -m benchmark.cli init-paper-corpus-template
 
 - `fact`: 事实经验
 - `strategy`: 策略经验
-- `cognitive`: 认知经验
+- `mechanism`: 机制经验
+- `boundary`: 边界经验
+- `failure`: 失败经验
 
 如果只想抽取部分类型，可以这样传：
 
@@ -271,7 +273,7 @@ python -m benchmark.cli generate-samples \
   --corpus-jsonl data/corpus.jsonl \
   --skill-ids paper_to_experience \
   --task-type document_to_xy \
-  --skill-config experience_types='["fact","strategy"]' \
+  --skill-config experience_types='["fact","strategy","boundary"]' \
   --skill-config strict_paper_only=true \
   --limit 10
 ```

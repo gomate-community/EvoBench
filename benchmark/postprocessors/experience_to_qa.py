@@ -6,6 +6,7 @@ from benchmark.agents.base import AgentBase
 from benchmark.schemas import (
     AnnotationGuideline,
     ArtifactRole,
+    DOC_TO_QA_OUTPUT_SCHEMA,
     SampleArtifact,
     SampleOutput,
     TaskType,
@@ -74,7 +75,7 @@ class ExperienceToQAPostprocessor(AgentBase):
                         evidence_ids=evidence_ids,
                     ),
                 ],
-                target_schema={"x": "question", "y": "answer"},
+                target_schema=DOC_TO_QA_OUTPUT_SCHEMA,
             ),
             source_refs=sample.source_refs,
             evidence=sample.evidence,
@@ -98,7 +99,13 @@ class ExperienceToQAPostprocessor(AgentBase):
             return f"For the future problem '{future_problem}', what validated factual experience from {title or 'the paper'} should guide the answer?"
         if experience_type == "strategy":
             return f"For the future problem '{future_problem}', what strategy from {title or 'the paper'} should be applied first?"
-        return f"For the future problem '{future_problem}', what cognitive caution or reasoning lesson from {title or 'the paper'} should be kept in mind?"
+        if experience_type == "mechanism":
+            return f"For the future problem '{future_problem}', what mechanism from {title or 'the paper'} best explains the expected behavior?"
+        if experience_type == "boundary":
+            return f"For the future problem '{future_problem}', what scope limit from {title or 'the paper'} should constrain the answer?"
+        if experience_type == "failure":
+            return f"For the future problem '{future_problem}', what failed attempt or negative lesson from {title or 'the paper'} should be avoided?"
+        return f"For the future problem '{future_problem}', what transferable experience from {title or 'the paper'} should be kept in mind?"
 
     def _compose_answer(self, experience: dict) -> str:
         statement = str(experience.get("experience_statement", "")).strip()

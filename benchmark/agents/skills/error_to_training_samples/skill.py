@@ -9,6 +9,10 @@ from benchmark.agents.skills.error_to_training_samples.prompts import (
 from benchmark.schemas import (
     AnnotationGuideline,
     ArtifactRole,
+    ErrorBoundarySampleSchema,
+    ErrorContrastiveSampleSchema,
+    ErrorCorrectionDeltaSchema,
+    ErrorCorrectedSampleSchema,
     ErrorSample,
     SampleArtifact,
     SampleInput,
@@ -16,6 +20,9 @@ from benchmark.schemas import (
     TaskType,
     UnifiedSample,
     VerificationMethod,
+    ERROR_TO_TRAINING_BOUNDARY_OUTPUT_SCHEMA,
+    ERROR_TO_TRAINING_CONTRASTIVE_OUTPUT_SCHEMA,
+    ERROR_TO_TRAINING_CORRECTED_OUTPUT_SCHEMA,
 )
 
 
@@ -57,25 +64,30 @@ class ErrorToTrainingSamplesSkill(SkillBase):
                 "negative_y": "optional wrong answer",
             },
             positive_criteria=[
-                "新样本应针对原错误类型。",
-                "正确答案应比原错误输出更受约束。",
-                "负样本必须能暴露同类错误。",
+                "The new sample should target the same failure mode as the original error.",
+                "The corrected answer should be more constrained and more faithful than the wrong output.",
+                "Negative or contrastive variants should expose the same class of mistake clearly.",
             ],
             negative_criteria=[
-                "不得简单复制原样本而不变化。",
-                "不得生成没有正确答案的训练样本。",
+                "Do not duplicate the source sample without introducing a meaningful learning signal.",
+                "Do not emit a training sample with no usable target behavior.",
             ],
             edge_cases=[
-                "如果 expected_output 缺失，应先生成纠错说明或进入人工复核。",
+                "If expected_output is missing, prefer human review or an abstaining target.",
             ],
             human_review_required=True,
             review_priority="high",
         )
 
     def _corrected_sample(self, err: ErrorSample) -> UnifiedSample:
-        expected = err.expected_output if err.expected_output is not None else "需要人工补充标准答案"
-        x = f"请修正以下任务中的错误输出，并给出符合要求的答案。\n任务：{err.input_text}\n错误输出：{err.wrong_output}"
-        y = expected
+        expected = err.expected_output if err.expected_output is not None else "A human reviewer should provide the corrected target."
+        x = (
+            "Fix the incorrect output for the task below and produce the corrected answer.\n"
+            f"Task: {err.input_text}\n"
+            f"Wrong output: {err.wrong_output}"
+        )
+        correction = ErrorCorrectionDeltaSchema.model_validate({"from": err.wrong_output, "to": expected})
+        payload = ErrorCorrectedSampleSchema(x=x, y=expected, correction=correction)
         return UnifiedSample(
             sample_id=self.make_id("sample", self.definition.skill_id, err.error_id, "corrected"),
             task_type=TaskType.error_to_training_set,
@@ -85,11 +97,11 @@ class ErrorToTrainingSamplesSkill(SkillBase):
             input=self._base_input(err),
             output=SampleOutput(
                 artifacts=[
-                    SampleArtifact(role=ArtifactRole.question, key="x", value=x),
-                    SampleArtifact(role=ArtifactRole.answer, key="y", value=y),
-                    SampleArtifact(role=ArtifactRole.correction, key="correction", value={"from": err.wrong_output, "to": y}),
+                    SampleArtifact(role=ArtifactRole.question, key="x", value=payload.x),
+                    SampleArtifact(role=ArtifactRole.answer, key="y", value=payload.y),
+                    SampleArtifact(role=ArtifactRole.correction, key="correction", value=payload.correction.model_dump(by_alias=True)),
                 ],
-                target_schema={"x": "instruction", "y": "corrected_answer"},
+                target_schema=ERROR_TO_TRAINING_CORRECTED_OUTPUT_SCHEMA,
             ),
             instruction=CORRECTED_INSTRUCTION,
             verification_method=VerificationMethod.human if err.expected_output is None else VerificationMethod.exact_match,
@@ -104,9 +116,17 @@ class ErrorToTrainingSamplesSkill(SkillBase):
         )
 
     def _contrastive_sample(self, err: ErrorSample) -> UnifiedSample:
-        expected = err.expected_output if err.expected_output is not None else "待人工确认的优选答案"
-        x = f"比较两个候选答案，选择更符合任务要求的一项。\n任务：{err.input_text}"
-        y = {"preferred": expected, "rejected": err.wrong_output, "error_type": err.error_type}
+        preferred = err.expected_output if err.expected_output is not None else "A human reviewer should select the preferred output."
+        x = (
+            "Compare the candidate outputs below and choose the one that best satisfies the task.\n"
+            f"Task: {err.input_text}"
+        )
+        critique = err.diagnosis or f"Error type: {err.error_type}"
+        payload = ErrorContrastiveSampleSchema(
+            x=x,
+            y={"preferred": preferred, "rejected": err.wrong_output, "error_type": err.error_type},
+            critique=critique,
+        )
         return UnifiedSample(
             sample_id=self.make_id("sample", self.definition.skill_id, err.error_id, "contrastive"),
             task_type=TaskType.error_to_training_set,
@@ -116,15 +136,11 @@ class ErrorToTrainingSamplesSkill(SkillBase):
             input=self._base_input(err),
             output=SampleOutput(
                 artifacts=[
-                    SampleArtifact(role=ArtifactRole.question, key="x", value=x),
-                    SampleArtifact(role=ArtifactRole.label, key="y", value=y),
-                    SampleArtifact(
-                        role=ArtifactRole.critique,
-                        key="critique",
-                        value=err.diagnosis or f"错误类型：{err.error_type}",
-                    ),
+                    SampleArtifact(role=ArtifactRole.question, key="x", value=payload.x),
+                    SampleArtifact(role=ArtifactRole.label, key="y", value=payload.y.model_dump()),
+                    SampleArtifact(role=ArtifactRole.critique, key="critique", value=payload.critique),
                 ],
-                target_schema={"x": "comparison_prompt", "y": "preference_pair"},
+                target_schema=ERROR_TO_TRAINING_CONTRASTIVE_OUTPUT_SCHEMA,
             ),
             instruction=CONTRASTIVE_INSTRUCTION,
             verification_method=VerificationMethod.human,
@@ -138,10 +154,20 @@ class ErrorToTrainingSamplesSkill(SkillBase):
         )
 
     def _boundary_sample(self, err: ErrorSample) -> UnifiedSample:
-        expected = err.expected_output if err.expected_output is not None else "证据不足时应拒答或请求补充信息"
+        safe_answer = err.expected_output if err.expected_output is not None else "Abstain or ask for the missing information instead of guessing."
         x = (
-            "请处理一个与原错误相邻的边界场景，避免重复同类错误。\n"
-            f"原任务：{err.input_text}\n边界约束：只使用题面信息，不得补充未给出的事实。"
+            "Handle a boundary case related to the original failure without repeating the same mistake.\n"
+            f"Original task: {err.input_text}\n"
+            "Boundary constraint: use only the information in the prompt and do not invent missing facts."
+        )
+        payload = ErrorBoundarySampleSchema(
+            x=x,
+            T=[
+                "Identify the original failure mode.",
+                "Check the boundary constraint carefully.",
+                "Produce a safe answer that does not cross the stated limits.",
+            ],
+            y=safe_answer,
         )
         return UnifiedSample(
             sample_id=self.make_id("sample", self.definition.skill_id, err.error_id, "boundary"),
@@ -152,15 +178,11 @@ class ErrorToTrainingSamplesSkill(SkillBase):
             input=self._base_input(err),
             output=SampleOutput(
                 artifacts=[
-                    SampleArtifact(role=ArtifactRole.question, key="x", value=x),
-                    SampleArtifact(role=ArtifactRole.answer, key="y", value=expected),
-                    SampleArtifact(
-                        role=ArtifactRole.reasoning_trace,
-                        key="T",
-                        value=["识别原错误类型。", "检查边界约束。", "生成不过界的答案。"],
-                    ),
+                    SampleArtifact(role=ArtifactRole.question, key="x", value=payload.x),
+                    SampleArtifact(role=ArtifactRole.answer, key="y", value=payload.y),
+                    SampleArtifact(role=ArtifactRole.reasoning_trace, key="T", value=payload.T),
                 ],
-                target_schema={"x": "boundary_instruction", "T": "solution_steps", "y": "safe_answer"},
+                target_schema=ERROR_TO_TRAINING_BOUNDARY_OUTPUT_SCHEMA,
             ),
             instruction=BOUNDARY_INSTRUCTION,
             verification_method=VerificationMethod.human,
