@@ -1,0 +1,58 @@
+skills:
+  - id: fact_verification
+    name: 事实核验
+    description: 判断事实陈述是否被证据支持，并定位最小充分证据
+    default_answer_type: structured_json
+    review_policy: risk_based
+  - id: temporal_awareness
+    name: 时效判断
+    description: 区分当前事实、历史事实、过时事实与未知时间事实
+    default_answer_type: structured_json
+    review_policy: sample_10_percent
+  - id: source_attribution
+    name: 事实归因
+    description: 根据证据定位来源、主体、时间与责任归因
+    default_answer_type: source_selection
+    review_policy: sample_10_percent
+  - id: evidence_selection
+    name: 最小证据选择
+    description: 从候选句中选择能够支持答案的最小充分证据
+    default_answer_type: evidence_based
+    review_policy: sample_5_percent
+  - id: conflict_resolution
+    name: 冲突证据处理
+    description: 处理多源冲突并给出不确定性说明
+    default_answer_type: structured_json
+    review_policy: human_high_risk
+  - id: data_value_judgement
+    name: 数据价值判断
+    description: 判断信息对于业务、研究或决策的价值
+    default_answer_type: rubric
+    review_policy: human_high_risk
+  - id: abstention
+    name: 证据不足/拒答能力
+    description: 检测模型是否会在证据不足或错误前提下拒答
+    default_answer_type: abstain
+    review_policy: human_medium_risk
+  - id: causal_attribution
+    name: 因果归因判断
+    description: 区分明确因果、相关性和宣传性声明
+    default_answer_type: structured_json
+    review_policy: sample_20_percent
+sample_generation:
+  default_sample_types:
+    - fact_verification
+    - source_attribution
+    - evidence_selection
+    - temporal_awareness
+    - abstention
+    - data_value_judgement
+  high_risk_sample_types:
+    - conflict_resolution
+    - data_value_judgement
+    - abstention
+  quality_gates:
+    min_evidence_count: 1
+    max_ambiguity_risk: 0.55
+    max_leakage_risk: 0.75
+    min_evidence_coverage: 0.35

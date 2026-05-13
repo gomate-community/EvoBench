@@ -1,0 +1,9 @@
+services:
+  benchmark-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////app/benchmark.db
+    volumes:
+      - ./benchmark.db:/app/benchmark.db

@@ -1,0 +1,63 @@
+skills:
+  - skill_id: doc_to_question
+    name: Document to Question
+    task_type: document_to_x
+    category: generation
+    description: 基于文档生成可回答、可验证的问题 x。
+    output_schema: {x: question}
+    quality_rules: {min_evidence_coverage: 0.35}
+    config: {sentences_per_doc: 1}
+    tags: [d_to_x, question_generation]
+
+  - skill_id: doc_to_answer
+    name: Document to Answer
+    task_type: document_to_x
+    category: generation
+    description: 基于文档生成答案或摘要片段 x。
+    output_schema: {x: answer}
+    quality_rules: {min_evidence_coverage: 0.35}
+    config: {sentences_per_doc: 1}
+    tags: [d_to_x, answer_generation]
+
+  - skill_id: doc_to_qa
+    name: Document to QA Pair
+    task_type: document_to_xy
+    category: generation
+    description: 基于文档生成问题 x 和答案 y。
+    output_schema: {x: question, y: answer}
+    quality_rules: {min_evidence_coverage: 0.4}
+    config: {pairs_per_doc: 2}
+    tags: [d_to_xy, qa]
+
+  - skill_id: doc_to_qa_steps
+    name: Document to QA with Solution Steps
+    task_type: document_to_xty
+    category: generation
+    description: 基于文档生成问题 x、外显步骤 T 和答案 y。
+    output_schema: {x: question, T: solution_steps, y: answer}
+    quality_rules: {min_evidence_coverage: 0.4, human_review_required: true}
+    config: {items_per_doc: 2}
+    tags: [d_to_xty, solution_steps]
+
+  - skill_id: paper_to_experience
+    name: Paper to Experience
+    task_type: document_to_xy
+    category: generation
+    description: 基于学术论文抽取可迁移的事实经验、策略经验和认知经验。
+    output_schema: {x: future_problem, y: experience_card}
+    quality_rules: {min_evidence_coverage: 0.45, human_review_required: true}
+    config:
+      experiences_per_doc: 3
+      experience_types: [fact, strategy, cognitive]
+      strict_paper_only: false
+    tags: [d_to_xy, paper_experience, knowledge_transfer]
+
+  - skill_id: error_to_training_samples
+    name: Error Sample Augmentation
+    task_type: error_to_training_set
+    category: augmentation
+    description: 基于错误样本生成纠错、对比和边界训练样本集合。
+    output_schema: {x: new_input, y: target_or_preference, T: optional_steps}
+    quality_rules: {human_review_required: true}
+    config: {include_contrastive: true, include_boundary: true}
+    tags: [error_aug, training_data]

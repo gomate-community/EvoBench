@@ -1,0 +1,15 @@
+weights:
+  verifiable_score: 0.50
+  arena_score: 0.25
+  reliability_score: 0.20
+  leakage_penalty_max: 10
+arena:
+  k_factor: 32
+  initial_rating: 1000
+  anchor_low: 800
+  anchor_high: 1400
+quality_thresholds:
+  too_easy_accuracy: 0.95
+  too_hard_accuracy: 0.10
+  min_discrimination: 0.15
+  max_ambiguity_rate: 0.20
