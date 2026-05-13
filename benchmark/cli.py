@@ -16,7 +16,7 @@ from benchmark.schemas import ErrorSample, SampleType, SkillGenerationRequest, T
 from benchmark.storage.db import init_db as _init_storage
 from benchmark.storage.repository import BenchmarkRepository
 
-app = typer.Typer(help="Dynamic Benchmark Framework CLI")
+app = typer.Typer(help="EvoBench CLI")
 
 
 def _coerce_cli_value(raw: str):

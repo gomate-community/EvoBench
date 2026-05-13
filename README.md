@@ -1,6 +1,7 @@
-# Dynamic Benchmark Framework v3
+# EvoBench v3
 
-这个版本已经把存储从数据库切换成了 `jsonl` 文件。
+A skill-driven framework for generating, validating, and evolving high-quality benchmark samples across tasks.
+
 
 默认数据文件：
 

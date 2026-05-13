@@ -1,7 +1,7 @@
 [project]
-name = "dynamic-benchmark-framework"
+name = "evobench"
 version = "0.1.0"
-description = "Dynamic benchmark framework for high-value data evaluation"
+description = "EvoBench for high-value data evaluation"
 requires-python = ">=3.10"
 dependencies = [
   "fastapi>=0.110",

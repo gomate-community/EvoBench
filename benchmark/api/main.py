@@ -11,7 +11,7 @@ from benchmark.schemas import ErrorSample, GenerationRequest, SampleType, SkillG
 from benchmark.storage.db import init_db
 from benchmark.storage.repository import BenchmarkRepository
 
-app = FastAPI(title="Dynamic Benchmark Framework", version="0.3.0")
+app = FastAPI(title="EvoBench", version="0.3.0")
 
 
 @app.on_event("startup")
