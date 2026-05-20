@@ -1,4 +1,5 @@
 from benchmark.agents.skills.base import SkillBase, SkillContext
+from benchmark.agents.skills.benchmark_qa import BenchmarkQASkill
 from benchmark.agents.skills.doc_to_answer import DocumentToAnswerSkill
 from benchmark.agents.skills.doc_to_qa import DocumentToQASkill
 from benchmark.agents.skills.doc_to_qa_steps import DocumentToQAStepsSkill
@@ -12,6 +13,7 @@ ErrorAugmentationSkill = ErrorToTrainingSamplesSkill
 __all__ = [
     "SkillBase",
     "SkillContext",
+    "BenchmarkQASkill",
     "DocumentToQuestionSkill",
     "DocumentToAnswerSkill",
     "DocumentToQASkill",

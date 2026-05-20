@@ -404,6 +404,13 @@ ERROR_TO_TRAINING_OUTPUT_SCHEMAS = build_output_schema(
     },
 )
 
+BENCHMARK_QA_OUTPUT_SCHEMA = build_output_schema(
+    schema_name="benchmark_qa_sample",
+    artifact_map={"x": "question_or_statement", "y": "answer_or_assessment"},
+    model=DocumentQASampleSchema,
+    description="Output schema for benchmark QA samples (normal / counterfactual / risk variants).",
+)
+
 
 class UnifiedSample(BaseModel):
     """Unified schema for benchmark, SFT, evaluation and error-augmentation samples.
