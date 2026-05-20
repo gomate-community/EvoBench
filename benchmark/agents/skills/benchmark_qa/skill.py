@@ -80,16 +80,18 @@ class BenchmarkQASkill(DocumentSkillMixin):
 
     def _build_triplet_samples(self, doc: SourceDocument, triplet: dict) -> list[UnifiedSample]:
         """从一组三元组构建 3 条 UnifiedSample"""
-        question = triplet.get("question", "")
+        question_normal = triplet.get("question_normal") or triplet.get("question", "")
+        question_counterfactual = triplet.get("question_counterfactual") or question_normal
+        question_risk = triplet.get("question_risk") or question_normal
         fact_answer = triplet.get("fact_answer", "")
         counterfactual_answer = triplet.get("counterfactual_answer", "")
         entity_replaced = triplet.get("entity_replaced", "")
-        risk_statement = triplet.get("risk_statement", "")
+        risk_answer = triplet.get("risk_answer", "")
         risk_level = triplet.get("risk_level", "medium")
         risk_reason = triplet.get("risk_reason", "")
         evidence_text = triplet.get("evidence", "")
 
-        if not question or not fact_answer:
+        if not question_normal or not fact_answer:
             return []
 
         group_id = uuid.uuid4().hex[:12]
@@ -102,7 +104,7 @@ class BenchmarkQASkill(DocumentSkillMixin):
         # ─── 样本 A: 正常样本 ─────────────────────────────────────────────
         results.append(
             UnifiedSample(
-                sample_id=self.make_id("sample", "benchmark_qa", "normal", doc.source_id, question),
+                sample_id=self.make_id("sample", "benchmark_qa", "normal", doc.source_id, question_normal),
                 task_type=TaskType.document_to_xy,
                 skill_id=self.definition.skill_id,
                 domain=self.context.config.domain,
@@ -110,7 +112,7 @@ class BenchmarkQASkill(DocumentSkillMixin):
                 input=base_input,
                 output=SampleOutput(
                     artifacts=[
-                        SampleArtifact(role=ArtifactRole.question, key="x", value=question, evidence_ids=[evidence.evidence_id]),
+                        SampleArtifact(role=ArtifactRole.question, key="x", value=question_normal, evidence_ids=[evidence.evidence_id]),
                         SampleArtifact(role=ArtifactRole.answer, key="y", value=fact_answer, evidence_ids=[evidence.evidence_id]),
                     ],
                     target_schema=self.definition.output_schema,
@@ -135,7 +137,7 @@ class BenchmarkQASkill(DocumentSkillMixin):
         if counterfactual_answer:
             results.append(
                 UnifiedSample(
-                    sample_id=self.make_id("sample", "benchmark_qa", "counterfactual", doc.source_id, question),
+                    sample_id=self.make_id("sample", "benchmark_qa", "counterfactual", doc.source_id, question_counterfactual),
                     task_type=TaskType.document_to_xy,
                     skill_id=self.definition.skill_id,
                     domain=self.context.config.domain,
@@ -143,7 +145,7 @@ class BenchmarkQASkill(DocumentSkillMixin):
                     input=base_input,
                     output=SampleOutput(
                         artifacts=[
-                            SampleArtifact(role=ArtifactRole.question, key="x", value=question, evidence_ids=[evidence.evidence_id]),
+                            SampleArtifact(role=ArtifactRole.question, key="x", value=question_counterfactual, evidence_ids=[evidence.evidence_id]),
                             SampleArtifact(role=ArtifactRole.answer, key="y", value=counterfactual_answer, evidence_ids=[evidence.evidence_id]),
                         ],
                         target_schema=self.definition.output_schema,
@@ -166,11 +168,11 @@ class BenchmarkQASkill(DocumentSkillMixin):
             )
 
         # ─── 样本 C: 风险样本 ─────────────────────────────────────────────
-        if risk_statement:
+        if risk_answer:
             risk_difficulty = RISK_DIFFICULTY_MAP.get(risk_level, 0.65)
             results.append(
                 UnifiedSample(
-                    sample_id=self.make_id("sample", "benchmark_qa", "risk", doc.source_id, risk_statement),
+                    sample_id=self.make_id("sample", "benchmark_qa", "risk", doc.source_id, question_risk, risk_answer),
                     task_type=TaskType.document_to_xy,
                     skill_id=self.definition.skill_id,
                     domain=self.context.config.domain,
@@ -178,8 +180,8 @@ class BenchmarkQASkill(DocumentSkillMixin):
                     input=base_input,
                     output=SampleOutput(
                         artifacts=[
-                            SampleArtifact(role=ArtifactRole.question, key="x", value=risk_statement, evidence_ids=[]),
-                            SampleArtifact(role=ArtifactRole.answer, key="y", value=f"该陈述存在{risk_level}风险：{risk_reason}", evidence_ids=[]),
+                            SampleArtifact(role=ArtifactRole.question, key="x", value=question_risk, evidence_ids=[evidence.evidence_id]),
+                            SampleArtifact(role=ArtifactRole.answer, key="y", value=risk_answer, evidence_ids=[evidence.evidence_id]),
                         ],
                         target_schema=self.definition.output_schema,
                     ),
