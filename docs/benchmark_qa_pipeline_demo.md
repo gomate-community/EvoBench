@@ -6,6 +6,66 @@
 
 ---
 
+## 〇、代码组件流程图
+
+### 0.1 主流程
+
+```mermaid
+graph TB
+    U["用户"]
+    A["1. CLI 入口"]
+    B["2. 主编排器 Pipeline"]
+    C["3. 语料采集 Agent<br/>找资料：联网搜 / 读本地 / 取已有缓存"]
+    D["4. 语料筛选 Agent<br/>挑资料：去重、过滤低质、按可信度排序"]
+    E["5. Skill 工厂 + 注册中心<br/>选技能：根据 skill_id 拿到对应的样本生成器"]
+    F["6. Skill 实现 (任意一种)<br/>做样本：套 prompt 调大模型，把回答装成统一样本"]
+    G["7. 质量校验 Agent<br/>质检：缺字段?证据够不够?重复?有就拒掉"]
+    H["8. 仓储 Repository<br/>存盘：通过的标 verified，拒掉的标 rejected，全部 upsert 进 JSONL"]
+    O[("data/corpus.jsonl<br/>data/samples.jsonl")]
+
+    U --> A --> B
+    B --> C --> D --> B
+    B --> E --> F --> B
+    B --> G --> B
+    B --> H --> O
+```
+
+### 0.2 Skill 内部做了什么
+
+```mermaid
+graph TB
+    S1["拿到一批资料<br/>(已经被筛选过的文档/错例)"]
+    S2["读技能配置<br/>(每篇出几条、要不要变体…)"]
+    S3["拼 prompt + 调大模型<br/>(或走本地规则模板)"]
+    S4["解析模型回答<br/>(从 JSON 里抠出问题/答案/证据)"]
+    S5["装配统一样本对象<br/>(挂上证据、来源、元数据)"]
+    S6["返回样本列表<br/>交给主编排器"]
+
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6
+```
+
+### 0.3 关键代码位置索引（通用职责 → 实现位置）
+
+| 步骤 | 通用职责 | 代码位置 |
+|---|---|---|
+| 1 | CLI 入口 | `benchmark/cli.py` |
+| 1 | 请求/结果 DTO | `benchmark/schemas.py` |
+| 2 | 主编排器 | `benchmark/pipelines/` |
+| 3 | 语料采集 Agent | `benchmark/agents/source_agent.py` |
+| 3 | 检索适配器（可插拔） | `benchmark/adapters/retriever.py` |
+| 4 | 语料筛选 Agent | `benchmark/agents/source_selector_agent.py` |
+| 5 | Skill 工厂 | `benchmark/agents/sample_factory_agent.py` |
+| 5 | Skill 注册中心 | `benchmark/agents/skills/registry.py` |
+| 6 | Skill 抽象基类 / 通用混入 | `benchmark/agents/skills/base.py`、`benchmark/agents/skills/_document_common.py` |
+| 6 | 所有 Skills 实现 | `benchmark/agents/skills/<skill_id>/`（含 `skill.py` + `prompts.py`） |
+| 6 | LLM 适配器（可插拔） | `benchmark/adapters/llm.py` |
+| 7 | 质量校验 Agent | `benchmark/agents/verifier_agent.py` |
+| 8 | 仓储与 JSONL 持久化 | `benchmark/storage/repository.py`、`benchmark/storage/db.py` |
+| —  | 后处理与样本转换 | `benchmark/postprocessors/`、`benchmark/samples/` |
+| —  | 评测与聚合 | `benchmark/evaluation/`、`benchmark/arena/` |
+
+---
+
 ## 一、语料抽取结果
 
 ### 1.1 原始数据
