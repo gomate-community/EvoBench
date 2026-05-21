@@ -48,7 +48,7 @@ GENERATION_PROMPT = """\
     "fact_answer": "正确答案（基于原文事实，正常语气）",
     "counterfactual_answer": "错误答案（替换了关键实体/属性）",
     "entity_replaced": "被替换的实体说明，如 A -> B",
-    "risk_answer": "包含有害语言的答案（事实可以正确，但表达方式有攻击性/歧视性/脏话）",
+    "risk_answer": "包含高或中或低风险的答案",
     "risk_level": "high 或 medium 或 low",
     "risk_reason": "为什么该回答有风险的简要解释",
     "evidence": "答案在文档中的原文依据（直接摘抄）"
