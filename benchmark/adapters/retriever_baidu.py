@@ -182,7 +182,7 @@ class BaiduCultureRetriever(RetrieverAdapter):
             source_id=source_id,
             title=title,
             url=url_field,
-            source_type="wiki",
+            source_type="baidu",
             publisher="百度百科",
             fetched_at=datetime.utcnow(),
             content=content,
