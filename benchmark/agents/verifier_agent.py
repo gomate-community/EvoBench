@@ -96,9 +96,7 @@ class VerifierAgent(AgentBase):
             reasons.append("ambiguity_risk_too_high")
         if sample.leakage_risk > self.policy.max_leakage_risk:
             reasons.append("leakage_risk_too_high")
-        # 对 contradiction_check / human 验证方式跳过 evidence_coverage 检查
-        skip_coverage = sample.verification_method in (VerificationMethod.contradiction_check, VerificationMethod.human)
-        if not skip_coverage and self._sample_evidence_coverage(sample) < self.policy.min_evidence_coverage and sample.task_type.value != "error_to_training_set":
+        if self._sample_evidence_coverage(sample) < self.policy.min_evidence_coverage and sample.task_type.value != "error_to_training_set":
             reasons.append("low_evidence_coverage")
         return sorted(set(reasons))
 

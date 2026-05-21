@@ -13,6 +13,8 @@
 ```mermaid
 graph TB
     U["用户"]
+    Z0["0. sitecustomize.py<br/>启动钩子：Python 一启动就被自动加载"]
+    Z1["0. benchmark.bootstrap<br/>一次性挂载：注册扩展 Skill、打补丁（百度检索、跳覆盖检查、provider 别名等）"]
     A["1. CLI 入口"]
     B["2. 主编排器 Pipeline"]
     C["3. 语料采集 Agent<br/>找资料：联网搜 / 读本地 / 取已有缓存"]
@@ -21,8 +23,9 @@ graph TB
     F["6. Skill 实现 (任意一种)<br/>做样本：套 prompt 调大模型，把回答装成统一样本"]
     G["7. 质量校验 Agent<br/>质检：缺字段?证据够不够?重复?有就拒掉"]
     H["8. 仓储 Repository<br/>存盘：通过的标 verified，拒掉的标 rejected，全部 upsert 进 JSONL"]
-    O[("data/corpus.jsonl<br/>data/samples.jsonl")]
+    O[("data/corpus/{source}/{topic}.jsonl<br/>data/samples/{skill_id}/{status}.jsonl<br/>（旧扁平文件迁至 _legacy/）")]
 
+    Z0 --> Z1 --> A
     U --> A --> B
     B --> C --> D --> B
     B --> E --> F --> B
@@ -48,6 +51,8 @@ graph TB
 
 | 步骤 | 通用职责 | 代码位置 |
 |---|---|---|
+| 0 | Python 启动钩子（自动加载） | `sitecustomize.py` |
+| 0 | 扩展层 bootstrap（注册 + 补丁） | `benchmark/bootstrap.py`、`benchmark/adapters/llm_rightcode.py`、`benchmark/adapters/retriever_baidu.py`、`benchmark/adapters/retriever_wikipedia.py`、`benchmark/agents/verifier_patches.py`、`benchmark/pipelines/sample_generation_patches.py`、`benchmark/agents/skills/doc_to_qa_llm/`、`benchmark/agents/skills/benchmark_qa/schema.py`、`benchmark/storage/data_layout.py`、`benchmark/storage/repository_patches.py`、`benchmark/storage/db_patches.py` |
 | 1 | CLI 入口 | `benchmark/cli.py` |
 | 1 | 请求/结果 DTO | `benchmark/schemas.py` |
 | 2 | 主编排器 | `benchmark/pipelines/` |

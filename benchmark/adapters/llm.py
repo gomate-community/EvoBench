@@ -158,7 +158,7 @@ def build_llm_adapter(
     resolved_provider = (provider or settings.llm_provider).lower()
     if resolved_provider == "mock":
         return MockLLMAdapter()
-    if resolved_provider in {"openai", "openai_compatible", "local_openai", "rightcode"}:
+    if resolved_provider in {"openai", "openai_compatible", "local_openai"}:
         return OpenAICompatibleLLMAdapter(
             OpenAICompatibleConfig(
                 model=model or settings.llm_model,

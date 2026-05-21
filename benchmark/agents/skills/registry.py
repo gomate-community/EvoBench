@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any
 
 from benchmark.agents.skills.base import SkillBase, SkillContext
-from benchmark.agents.skills.benchmark_qa import BenchmarkQASkill
 from benchmark.agents.skills.doc_to_answer import DocumentToAnswerSkill
 from benchmark.agents.skills.doc_to_qa import DocumentToQASkill
 from benchmark.agents.skills.doc_to_qa_steps import DocumentToQAStepsSkill
@@ -13,7 +12,6 @@ from benchmark.agents.skills.doc_to_question import DocumentToQuestionSkill
 from benchmark.agents.skills.error_to_training_samples import ErrorToTrainingSamplesSkill
 from benchmark.agents.skills.paper_to_experience import PaperToExperienceSkill
 from benchmark.schemas import (
-    BENCHMARK_QA_OUTPUT_SCHEMA,
     DOC_TO_ANSWER_OUTPUT_SCHEMA,
     DOC_TO_QA_OUTPUT_SCHEMA,
     DOC_TO_QA_STEPS_OUTPUT_SCHEMA,
@@ -35,7 +33,6 @@ class SkillRegistry:
         "doc_to_qa_steps": DOC_TO_QA_STEPS_OUTPUT_SCHEMA,
         "paper_to_experience": PAPER_TO_EXPERIENCE_OUTPUT_SCHEMA,
         "error_to_training_samples": ERROR_TO_TRAINING_OUTPUT_SCHEMAS,
-        "benchmark_qa": BENCHMARK_QA_OUTPUT_SCHEMA,
     }
 
     _factories: dict[str, type[SkillBase]] = {
@@ -45,7 +42,6 @@ class SkillRegistry:
         "doc_to_qa_steps": DocumentToQAStepsSkill,
         "paper_to_experience": PaperToExperienceSkill,
         "error_to_training_samples": ErrorToTrainingSamplesSkill,
-        "benchmark_qa": BenchmarkQASkill,
     }
 
     def __init__(self, definitions: list[SkillDefinition] | None = None):
@@ -125,16 +121,6 @@ class SkillRegistry:
                 quality_rules={"human_review_required": True},
                 config={"include_contrastive": True, "include_boundary": True},
                 tags=["error_aug", "training_data"],
-            ),
-            SkillDefinition(
-                skill_id="benchmark_qa",
-                name="Benchmark QA (Normal + Counterfactual + Risk)",
-                task_type=TaskType.document_to_xy,
-                description="Generate triplet samples: normal fact QA, counterfactual QA, and risk-annotated statement.",
-                output_schema=BENCHMARK_QA_OUTPUT_SCHEMA,
-                quality_rules={"min_evidence_coverage": 0.3, "human_review_required": True},
-                config={"groups_per_doc": 2},
-                tags=["benchmark_qa", "counterfactual", "risk"],
             ),
         ]
 

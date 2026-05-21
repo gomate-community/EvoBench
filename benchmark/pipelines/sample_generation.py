@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from benchmark.adapters.llm import LLMAdapter, build_llm_adapter
-from benchmark.adapters.retriever import MockRetriever, RetrieverAdapter, BaiduCultureRetriever
+from benchmark.adapters.retriever import MockRetriever, RetrieverAdapter
 from benchmark.agents.sample_factory_agent import SampleFactoryAgent
 from benchmark.agents.source_agent import SourceAgent
 from benchmark.agents.source_selector_agent import SourceSelectionPolicy, SourceSelectorAgent
@@ -22,7 +22,7 @@ class SampleGenerationPipeline:
         source_policy: SourceSelectionPolicy | None = None,
         llm: LLMAdapter | None = None,
     ):
-        retriever = retriever or BaiduCultureRetriever()
+        retriever = retriever or MockRetriever()
         self.llm = llm or (build_llm_adapter() if settings.llm_enabled else None)
         self.source_policy = source_policy or SourceSelectionPolicy()
         self.source_agent = SourceAgent(retriever)
