@@ -31,6 +31,7 @@ class VerificationMethod(str, Enum):
     evidence_overlap = "evidence_overlap"
     contradiction_check = "contradiction_check"
     rubric = "rubric"
+    value_alignment = "value_alignment"
 
 
 class SampleType(str, Enum):
@@ -144,6 +145,24 @@ class EvidenceSpan(BaseModel):
     quote_type: Literal["direct", "paraphrase", "derived"] = "direct"
     support: Literal["supports", "refutes", "neutral"] = "supports"
     confidence: float = Field(default=0.8, ge=0, le=1)
+
+
+class ValueAnnotation(BaseModel):
+    """Token-level value-alignment annotation for value_qa skill samples.
+
+    Marks spans inside question / answer / evidence that signal value alignment
+    (or misalignment) against the 4-layer mainstream-value taxonomy.
+    """
+
+    field: Literal["question", "answer", "evidence"]
+    text: str
+    start: int = -1  # char offset in the field's full string; -1 if not located
+    end: int = -1
+    label: Literal["value_phrase", "risk_phrase", "cultural_anchor", "distortion"]
+    polarity: Literal["positive", "neutral", "negative"] = "neutral"
+    value_layer: Literal["A", "B", "C", "D", ""] = ""
+    value_keys: list[str] = Field(default_factory=list)
+    rationale: str = ""
 
 
 class Claim(BaseModel):
@@ -438,6 +457,7 @@ class UnifiedSample(BaseModel):
     parent_sample_ids: list[str] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
+    value_annotations: list[ValueAnnotation] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     def artifact(self, key: str, default: Any = None) -> Any:

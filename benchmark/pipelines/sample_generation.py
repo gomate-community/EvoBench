@@ -35,9 +35,12 @@ class SampleGenerationPipeline:
         repo = self._repository_for_request(request)
         docs = request.documents or await self._collect_docs(request)
         if docs:
+            # 2.缓存语料到本地 
             self.repo.upsert_documents(docs)
         selected_docs = self._select_docs(docs, request)
+        # 4.调 Skill 生成样本
         samples = await self.factory.generate(request, documents=selected_docs, error_samples=request.error_samples)
+        # 5.质检 → 落盘  
         verified = self.verifier.verify_samples(samples)
         accepted = [s for s in verified if s.status == "verified"]
         rejected = [s for s in verified if s.status == "rejected"]
@@ -62,6 +65,7 @@ class SampleGenerationPipeline:
             return BenchmarkRepository(samples_path=request.samples_jsonl_path)
         return self.repo
 
+    # 3.筛选合格语料    
     def _select_docs(self, docs: list[SourceDocument], request: SkillGenerationRequest) -> list[SourceDocument]:
         policy_kwargs = {
             "min_trust_level": self.source_policy.min_trust_level,
@@ -94,6 +98,7 @@ class SampleGenerationPipeline:
         selector = SourceSelectorAgent(SourceSelectionPolicy(**policy_kwargs))
         return selector.select(docs, limit=max(request.limit, len(docs)))
 
+    # 1.获取原始语料
     async def _collect_docs(self, request: SkillGenerationRequest) -> list[SourceDocument]:
         if request.task_type == TaskType.error_to_training_set or request.skill_ids == ["error_to_training_samples"]:
             return []
@@ -105,4 +110,4 @@ class SampleGenerationPipeline:
             return docs[: request.limit]
         if not request.topic:
             return self.repo.list_documents(limit=request.limit)
-        return await self.source_agent.collect(request.topic, limit=request.limit)
+        return await self.source_agent.collect(request.topic, limit=request.limit) # 指定topic

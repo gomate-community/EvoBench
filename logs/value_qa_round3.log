@@ -1,0 +1,127 @@
+===== Round3 batch start 2026-06-01 00:54:52 total_calls=30 concurrency=2 =====
+verified → data/samples/value_qa/verified.jsonl
+
+
+[1/30] [文化元素符合度] keyword=端午节
+
+[2/30] [文化元素符合度] keyword=中秋节
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[3/30] [文化元素符合度] keyword=元宵节
+
+[4/30] [文化元素符合度] keyword=京剧
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[5/30] [文化元素符合度] keyword=故宫
+
+[6/30] [行为社会规范符合度] keyword=孝道
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[7/30] [行为社会规范符合度] keyword=医德
+
+[8/30] [行为社会规范符合度] keyword=礼记
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 礼记 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+
+[9/30] [行为社会规范符合度] keyword=尊师重教
+
+[10/30] [行为社会规范符合度] keyword=婚礼习俗
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 2] Generated 6; verified 6; rejected 0
+
+[11/30] [价值观忠实度] keyword=爱国主义
+
+[12/30] [价值观忠实度] keyword=自强不息
+  [try 1] Generated 3; verified 3; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[13/30] [价值观忠实度] keyword=雷锋精神
+
+[14/30] [价值观忠实度] keyword=长征精神
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 长征精神 重试均失败
+  [try 2] Generated 6; verified 6; rejected 0
+
+[15/30] [价值观忠实度] keyword=五四运动
+
+[16/30] [公平合规度] keyword=妇女权益保障法
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[17/30] [公平合规度] keyword=教育公平
+
+[18/30] [公平合规度] keyword=乡村振兴
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 教育公平 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 乡村振兴 重试均失败
+
+[19/30] [公平合规度] keyword=劳动法
+
+[20/30] [公平合规度] keyword=反就业歧视
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 劳动法 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 反就业歧视 重试均失败
+
+[21/30] [伤害风险合规度] keyword=未成年人保护法
+
+[22/30] [伤害风险合规度] keyword=反家庭暴力法
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[23/30] [伤害风险合规度] keyword=食品安全法
+
+[24/30] [伤害风险合规度] keyword=校园霸凌
+  [try 1] Generated 3; verified 3; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[25/30] [伤害风险合规度] keyword=网络暴力
+
+[26/30] [隐私合规度] keyword=个人信息保护法
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[27/30] [隐私合规度] keyword=数据安全法
+
+[28/30] [隐私合规度] keyword=网络安全法
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[29/30] [隐私合规度] keyword=知情同意
+
+[30/30] [隐私合规度] keyword=人脸识别
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+===== Round3 batch end 2026-06-01 02:30:05 (elapsed 95.2 min) =====
+
+总样本数: 138 (46 组三联组)
+
+按维度分布:
+  价值观忠实度      :  33 条 (11 组)
+  伤害风险合规度     :  33 条 (11 组)
+  公平合规度       :  12 条 ( 4 组)
+  文化元素符合度     :  24 条 ( 8 组)
+  行为社会规范符合度   :  30 条 (10 组)
+  隐私合规度       :   6 条 ( 2 组)
+
+按档位分布:
+  high: 46
+  medium: 46
+  low: 46
+
+已保存: data/samples/value_qa/verified.round3_6dim_20260601_023005.jsonl
+已恢复: data/samples/value_qa/verified.jsonl (from verified.pre_round3_20260531_225341.jsonl)

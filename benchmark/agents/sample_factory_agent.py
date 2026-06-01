@@ -30,9 +30,11 @@ class SampleFactoryAgent:
             topic=request.topic,
             llm=self.llm,
         )
+        # _resolve_skills: 根据 skill_ids=["benchmark_qa"] 从注册中心拿到 BenchmarkQASkill
         skills = self._resolve_skills(request, context)
         samples: list[UnifiedSample] = []
         remaining = request.limit
+        # 逐个 skill 调 generate，累加直到 limit
         for skill in skills:
             if remaining <= 0:
                 break

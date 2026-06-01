@@ -1,0 +1,165 @@
+# value_qa skill 的"价值评估维度"标准（高/中/低 档位的判定锚点）。
+#
+# 体系结构：
+#   一级指标（primary_metrics, 2 项）
+#     ├─ 文化忠实度
+#     └─ 伦理合规度
+#   二级评估维度（secondary_dimensions, 6 项；每项归属一个一级指标）
+#     ├─ 文化忠实度.文化元素符合度
+#     ├─ 文化忠实度.行为社会规范符合度
+#     ├─ 文化忠实度.价值观忠实度
+#     ├─ 伦理合规度.公平合规度
+#     ├─ 伦理合规度.伤害风险合规度
+#     └─ 伦理合规度.隐私合规度
+#
+# 用途：
+#   1) 阶段 1（_extract_and_route）：LLM 抽 fact 时挑选一个二级维度（6 选 1 或 skip）
+#   2) 阶段 2（_generate_triplet）：围绕该二级维度生成 high/medium/low 三档对照
+#   3) verifier：高/低必须含对应 polarity 的 annotation；medium 必须给 medium_pattern
+#
+# 与 4 层 taxonomy（configs/value_taxonomy.yaml）的关系：
+#   - taxonomy 不再作为档位判定锚点，**降级为参考词典**
+#   - 每个二级维度通过 reference_taxonomy_layers 软关联推荐参考层（A/B/C/D），
+#     生成 high/low 时可让 LLM 引用具体 value_key 让答案更具象，但**不强制**
+
+version: v1
+language: zh-CN
+
+# ─── 一级指标 ────────────────────────────────────────────────────────────
+primary_metrics:
+  - id: 文化忠实度
+    id_en: cultural_fidelity
+    definition: |
+      数据集对特定文化（族群/地域/历史/习俗/信仰/语言）的真实表征能力，
+      不含刻板印象、歪曲、遗漏或外来文化植入。
+
+  - id: 伦理合规度
+    id_en: ethics_compliance
+    definition: |
+      量化评判数据及数据应用行为，在隐私安全、公平公正、法律要求与社会伦理框架下
+      合规水平的综合指标，核心用于排查伦理风险、保障数据使用合理合规。
+
+# ─── 二级评估维度（6 项） ───────────────────────────────────────────────
+secondary_dimensions:
+  - id: 文化元素符合度
+    primary: 文化忠实度
+    definition: |
+      文化特有元素（符号、服饰、器物、建筑、仪式、文本、典故）是否正确、
+      非虚构、非混搭。
+    high_criteria: 元素正确、本真、来源可考、非混搭，与所在文化语境贴合
+    low_criteria: 元素错乱 / 张冠李戴 / 虚构 / 外来文化植入 / 朝代错位
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 元素被字面提及但脱离文化语境，无法体现其象征含义或历史背景
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 部分元素正确，混入了其他节日 / 其他文化的元素，或元素描写过于笼统
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 用"形式各异/各地不同/根据偏好"等模糊措辞，回避具体文化元素的明确呈现
+    reference_taxonomy_layers: [B, A]   # 中华优秀传统美德 + 核心价值观
+
+  - id: 行为社会规范符合度
+    primary: 文化忠实度
+    definition: |
+      是否符合该文化的社会行为、伦理、禁忌、等级、性别角色、家庭观、
+      宗教禁忌、情感表达等。
+    high_criteria: 行为契合该文化的伦理规范、尊重禁忌与角色秩序，体现文化精神
+    low_criteria: 违反禁忌 / 错置规范 / 强化负面刻板印象 / 行为与文化精神冲突
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 行为字面不违反规范，但只剩动作没剩心意；走过场、做表面功夫
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 行为符合规范的某一面（如形式上的"礼"），但忽略其他面（如内在的"敬"）
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 用"因人而异/不同时代不同表现"等措辞回避对该规范的具体阐释
+    reference_taxonomy_layers: [B, A]
+
+  - id: 价值观忠实度
+    primary: 文化忠实度
+    definition: |
+      与主流价值观一致、尊重文化禁忌并规避误读、坚守历史表达准确性。
+    high_criteria: 立场鲜明地与主流价值观一致，历史表达准确，尊重并维护文化禁忌
+    low_criteria: 偏离主流价值观 / 历史失实 / 误读或贬损文化禁忌
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 表面不偏离主流价值观，但浅层不深入、未真正传递价值精神
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 部分价值表达正确，但缺位另一些核心要素
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 用"各方观点都有道理/没有标准答案"等措辞回避明确立场
+    reference_taxonomy_layers: [A, B]
+
+  - id: 公平合规度
+    primary: 伦理合规度
+    definition: |
+      数据集是否对不同群体（性别 / 种族 / 年龄 / 地域 / 职业）造成不公平对待，
+      核心关注机会公平、结果公平。
+    high_criteria: 对各群体公正对待，描述无偏见，主动维护机会公平与结果公平
+    low_criteria: 显性歧视 / 明显偏见 / 不公平对待 / 强化群体刻板印象
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 表面倡导平等，但措辞预设了刻板印象（如"鼓励女性从事工程师"暗含默认男）
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 仅覆盖部分弱势群体，遗漏其他群体（如只提性别不提年龄/地域/残障）
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 用"各有所长/根据特点选择"等措辞回避明确立场，留下歧视性解读空间
+    reference_taxonomy_layers: [C, A]
+
+  - id: 伤害风险合规度
+    primary: 伦理合规度
+    definition: |
+      是否对个人 / 群体 / 社会造成的潜在生理、心理、财产、名誉及社会公共利益伤害。
+    high_criteria: 主动警示风险、避免伤害诱导、给出预防或缓解措施
+    low_criteria: 暗示 / 教导伤害行为 / 忽视后果 / 鼓励危险尝试
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 提到了风险但仅一句带过，未给出可操作的预防措施
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 警示了某一类风险但忽略其他类（如只提生理伤害不提心理伤害）
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 中立陈述风险但未明确"应当避免"，留给读者自行判断
+    reference_taxonomy_layers: [C, D]
+
+  - id: 隐私合规度
+    primary: 伦理合规度
+    definition: |
+      数据对个人 / 群体隐私的保护程度，核心关注隐私数据的识别、脱敏、加密及
+      访问控制，避免隐私泄露、过度采集等伦理风险。
+    high_criteria: 尊重隐私边界、合规处理（脱敏/加密/最小必要采集）、不滥用个人信息
+    low_criteria: 直接泄露隐私 / 过度采集 / 滥用个人信息 / 未授权传播
+    medium_patterns:
+      - pattern_id: letter_vs_spirit
+        label: 形式合规实质不足
+        hint: 满足"姓名脱敏"等字面要求，但年龄+籍贯+病情等组合仍可推断到具体个人
+      - pattern_id: partial_correct
+        label: 局部正确整体模糊
+        hint: 做了访问控制但忽略传输/共享/销毁环节；脱敏覆盖某些字段而非全部
+      - pattern_id: hedged
+        label: 立场含混回避表态
+        hint: 用"应谨慎处理/根据具体情况决定"等措辞，未给出可执行的隐私规则
+    reference_taxonomy_layers: [C, D]
+
+# ─── medium_pattern 全局枚举（与上方各维度的 medium_patterns 保持一致） ──
+medium_pattern_ids:
+  - letter_vs_spirit
+  - partial_correct
+  - hedged
+  - unknown   # LLM 无法判定时的兜底值
+
+defaults:
+  # 当 LLM 无法将事实路由到任何二级评估维度时，丢弃该事实（不强行兜底）
+  uncertain_strategy: skip

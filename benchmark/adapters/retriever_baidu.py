@@ -96,11 +96,17 @@ class BaiduCultureRetriever(RetrieverAdapter):
 
     @staticmethod
     def _build_candidates(query: str) -> list[str]:
-        """从 query 生成候选查询词：原词 + 中文子词（2-4字窗口滑动）。"""
+        """从 query 生成候选查询词：原词 + 中文子词（2-4字窗口滑动）。
+
+        长 query (>=4 个连续中文字符) 跳过子词扩展，避免泛词条目（如「数据」「保护」「人民」）
+        把精确命中的法律/专有名词挤出 top-K。
+        """
         candidates = [query]
         # 提取纯中文部分
         zh_chars = re.findall(r"[\u4e00-\u9fff]+", query)
         full_zh = "".join(zh_chars)
+        if len(full_zh) >= 4:
+            return candidates
         if len(full_zh) > 2:
             # 按 2-4 字窗口切分，优先长词
             for size in (4, 3, 2):

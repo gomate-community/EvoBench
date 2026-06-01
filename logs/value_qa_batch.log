@@ -1,0 +1,183 @@
+===== batch start 2026-05-29 13:15:12 total=21 =====
+
+===== [1/21] 中秋节 =====
+[try 1] x=中秋节的时间是什么，名称与这一时间有什么关系？
+- sample_c9d598f83a16 | document_to_xy | value_qa | 
+x=中秋节的时间是什么，名称与这一时间有什么关系？
+[try 2] - sample_3d142a1c5ad5 | document_to_xy | value_qa | x=这段文字如何描述中秋节？
+- sample_a7b78b863100 | document_to_xy | value_qa | x=这段文字如何描述中秋节？
+- sample_3e30f855d615 | document_to_xy | value_qa | x=这段文字如何描述中秋节？
+[try 3] x=根据文段，中秋节的起源和相关风俗是怎样形成的？
+- sample_e7b635289d7e | document_to_xy | value_qa | 
+x=根据文段，中秋节的起源和相关风俗是怎样形成的？
+
+===== [2/21] 春节 =====
+[try 1] [value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+[value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+Generated 0 samples; verified 0; rejected 0.
+[try 2] x=根据文段，春节的起源是如何表述的？
+- sample_982ab521c0ee | document_to_xy | value_qa | 
+x=根据文段，春节的起源是如何表述的？
+[try 3] x=根据文档，春节早期形成与哪些文化元素有关？
+- sample_eaa54a9c3d63 | document_to_xy | value_qa | 
+x=根据文档，春节早期形成与哪些文化元素有关？
+
+===== [3/21] 清明节 =====
+[try 1] x=清明节的来源和内涵可以怎样概括？
+- sample_b7d080bd29ee | document_to_xy | value_qa | 
+x=清明节的来源和内涵可以怎样概括？
+[try 2] x=“明节”在“表明节操”这一义项上体现了怎样的价值取向？
+- sample_d8586a2a4585 | document_to_xy | value_qa | 
+x=“明节”在“表明节操”这一义项上体现了怎样的价值取向？
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [4/21] 重阳节 =====
+[try 1] x=根据文段，重阳节早期形成与哪些文化活动有关？
+- sample_ce2d25bc69c9 | document_to_xy | value_qa | 
+x=根据文段，重阳节早期形成与哪些文化活动有关？
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [5/21] 七夕节 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] x=重阳节通常承载了怎样的社会行为规范期待？
+- sample_021392fd88b2 | document_to_xy | value_qa | 
+x=重阳节通常承载了怎样的社会行为规范期待？
+[try 3] x=根据文段，七夕节中的饮食和乞巧活动在社会行为规范层面可以怎样理解？
+- sample_48fda81a4194 | document_to_xy | value_qa | 
+x=根据文段，七夕节中的饮食和乞巧活动在社会行为规范层面可以怎样理解？
+
+===== [6/21] 京剧 =====
+[try 1] x=京剧在形成过程中吸收了哪些来源，这种形成方式应如何理解？
+- sample_0d07e3630d9d | document_to_xy | value_qa | 
+x=京剧在形成过程中吸收了哪些来源，这种形成方式应如何理解？
+[try 2] x=根据文段，如何概括程砚秋在抗战期间归隐务农、拒唱义务戏这一做法的价值取向？
+- sample_4acd26c8f2bd | document_to_xy | value_qa | 
+x=根据文段，如何概括程砚秋在抗战期间归隐务农、拒唱义务戏这一做法的价值取向？
+[try 3] x=京剧脸谱的谱式通常有哪些类型？
+- sample_aa7b6f093438 | document_to_xy | value_qa | 
+x=京剧脸谱的谱式通常有哪些类型？
+
+===== [7/21] 书法 =====
+[try 1] x=书法作品在布局以及落款印章与正文、款识的关系上，一般应如何处理？
+- sample_79003837212c | document_to_xy | value_qa | 
+x=书法作品在布局以及落款印章与正文、款识的关系上，一般应如何处理？
+[try 2] x=狭义上的书法主要是怎样定义的？
+- sample_ed10f05196a9 | document_to_xy | value_qa | 
+x=狭义上的书法主要是怎样定义的？
+[try 3] x=这段材料如何描述书法创作中的核心表现要点？
+- sample_02520a61c300 | document_to_xy | value_qa | 
+x=这段材料如何描述书法创作中的核心表现要点？
+
+===== [8/21] 孝道 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] x=根据文档，孝道文化在传统文化中的定位和涵盖内容是什么？
+- sample_784cad11afe0 | document_to_xy | value_qa | 
+x=根据文档，孝道文化在传统文化中的定位和涵盖内容是什么？
+[try 3] x=这部剧所选取的故事在社会行为规范层面呈现出什么特点？
+- sample_3b96cf9ae34a | document_to_xy | value_qa | 
+x=这部剧所选取的故事在社会行为规范层面呈现出什么特点？
+
+===== [9/21] 爱国主义 =====
+[try 1] x=文中认为爱国主义集中表现为什么？
+- sample_81a91880f031 | document_to_xy | value_qa | 
+x=文中认为爱国主义集中表现为什么？
+[try 2] x=文中将爱国主义的集中表现概括为什么？
+- sample_550c3c196eab | document_to_xy | value_qa | 
+x=文中将爱国主义的集中表现概括为什么？
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [10/21] 自强不息 =====
+[try 1] x=“自强不息”主要表达了怎样的人生态度？
+- sample_02c0ad375667 | document_to_xy | value_qa | 
+x=“自强不息”主要表达了怎样的人生态度？
+[try 2] x=《易传》对有才德之人的品格提出了什么要求？
+- sample_6cccdf488b93 | document_to_xy | value_qa | 
+x=《易传》对有才德之人的品格提出了什么要求？
+[try 3] x=“自强不息”通常表达了什么含义？
+- sample_a724770745ef | document_to_xy | value_qa | 
+x=“自强不息”通常表达了什么含义？
+
+===== [11/21] 勤俭节约 =====
+[try 1] x=这段文字如何呈现“勤俭节约”这一品质与人物形象之间的关系？
+- sample_d012654e00b7 | document_to_xy | value_qa | 
+x=这段文字如何呈现“勤俭节约”这一品质与人物形象之间的关系？
+[try 2] x=文中对“勤俭节约”这一品质持什么态度？
+- sample_034b4c38787b | document_to_xy | value_qa | 
+x=文中对“勤俭节约”这一品质持什么态度？
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [12/21] 教师职业道德 =====
+[try 1] x=2008年修订的《中小学教师职业道德规范》提出了哪些基本要求？
+- sample_ae7fcc72d61d | document_to_xy | value_qa | 
+x=2008年修订的《中小学教师职业道德规范》提出了哪些基本要求？
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] x=根据文中信息，教师职业道德在教育实践中包含哪些行为要求？
+- sample_467d70e58d00 | document_to_xy | value_qa | 
+x=根据文中信息，教师职业道德在教育实践中包含哪些行为要求？
+
+===== [13/21] 社会公德 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] x=根据文段，社会公德的基础性和全民性特征意味着什么？
+- sample_3c288a0ae08b | document_to_xy | value_qa | 
+x=根据文段，社会公德的基础性和全民性特征意味着什么？
+
+===== [14/21] 文明礼仪 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [15/21] 妇女权益保障法 =====
+[try 1] [value_qa] route LLM call failed: LLM request failed for model=gpt-5.4
+Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [16/21] 残疾人保障法 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [17/21] 教育公平 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [18/21] 未成年人保护法 =====
+[try 1] x=《中华人民共和国未成年人保护法》的主要作用是什么？
+- sample_ffc32af148f4 | document_to_xy | value_qa | 
+x=《中华人民共和国未成年人保护法》的主要作用是什么？
+[try 2] [value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+[value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+Generated 0 samples; verified 0; rejected 0.
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== [19/21] 反家庭暴力法 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] Generated 0 samples; verified 0; rejected 0.
+[try 3] x=根据文中信息，这部法律制定的主要目的是什么？
+- sample_8b286e45c1fe | document_to_xy | value_qa | 
+x=根据文中信息，这部法律制定的主要目的是什么？
+
+===== [20/21] 食品安全法 =====
+[try 1] Generated 0 samples; verified 0; rejected 0.
+[try 2] x=根据文段，现行食品安全法在食品生产经营活动方面起到了什么作用？
+- sample_69652a8ca9a5 | document_to_xy | value_qa | 
+x=根据文段，现行食品安全法在食品生产经营活动方面起到了什么作用？
+[try 3] x=根据文段，现行食品安全法在食品生产经营活动和食品安全方面起到了什么作用？
+- sample_95a73dc790de | document_to_xy | value_qa | 
+x=根据文段，现行食品安全法在食品生产经营活动和食品安全方面起到了什么作用？
+
+===== [21/21] 网络安全法 =====
+[try 1] x=这部法律在立法目标中如何表述其对不同主体合法权益的保护？
+- sample_2881a88f2c6a | document_to_xy | value_qa | 
+x=这部法律在立法目标中如何表述其对不同主体合法权益的保护？
+[try 2] x=文中提到的关于修改网络安全法的安排，应当如何理解其价值导向？
+- sample_d59f5d865452 | document_to_xy | value_qa | 
+x=文中提到的关于修改网络安全法的安排，应当如何理解其价值导向？
+[try 3] Generated 0 samples; verified 0; rejected 0.
+
+===== batch end 2026-05-29 14:35:48 =====
+total=273
+sec={'文化元素符合度': 72, '行为社会规范符合度': 45, '价值观忠实度': 117, '伤害风险合规度': 27, '公平合规度': 6, '隐私合规度': 6}

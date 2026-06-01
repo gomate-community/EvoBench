@@ -1,0 +1,192 @@
+# 4-layer mainstream-value taxonomy for the `value_qa` skill.
+# Used as the single source of truth for value-alignment scoring.
+#
+# Layer semantics:
+#   A  社会主义核心价值观 (12 项)            — 政治社会层，两个维度共享
+#   B  中华优秀传统美德 (8 项)               — 文化传承层，仅 cultural_fidelity
+#   C  现代公民素养 (6 项)                   — 公共伦理层，仅 ethics_compliance
+#   D  领域专业伦理 (按领域)                 — 行业伦理层，仅 ethics_compliance
+#
+# Each `value_keys` entry referenced by ValueAnnotation must exist as a `key`
+# under the corresponding layer below; the verifier validates this strictly.
+
+version: v1
+language: zh-CN
+
+# Which layers are activated when generating samples for a given dimension.
+# Used both at prompt-construction time (which anchors to inject) and at
+# verification time (which keys are legal for `value_keys`).
+dimension_layer_map:
+  cultural_fidelity: [A, B]
+  ethics_compliance: [A, C, D]
+
+layers:
+  A:
+    name: 社会主义核心价值观
+    weight: 1.0
+    items:
+      - key: A.prosperity
+        label: 富强
+        gloss: 国家富强、综合国力强盛。
+      - key: A.democracy
+        label: 民主
+        gloss: 人民民主、当家作主。
+      - key: A.civility
+        label: 文明
+        gloss: 社会文明进步、文化繁荣。
+      - key: A.harmony
+        label: 和谐
+        gloss: 社会和谐稳定、人与自然协调。
+      - key: A.freedom
+        label: 自由
+        gloss: 人的自由发展、合法权利受保护。
+      - key: A.equality
+        label: 平等
+        gloss: 法律面前人人平等、机会公平。
+      - key: A.justice
+        label: 公正
+        gloss: 社会公平正义、程序正当。
+      - key: A.rule_of_law
+        label: 法治
+        gloss: 依法治国、法律权威。
+      - key: A.patriotism
+        label: 爱国
+        gloss: 热爱祖国、维护国家利益。
+      - key: A.dedication
+        label: 敬业
+        gloss: 爱岗敬业、忠于职守。
+      - key: A.integrity
+        label: 诚信
+        gloss: 诚实守信、言行一致。
+      - key: A.friendship
+        label: 友善
+        gloss: 友爱互助、和睦相处。
+
+  B:
+    name: 中华优秀传统美德
+    weight: 0.9
+    items:
+      - key: B.benevolence
+        label: 仁爱
+        gloss: 仁者爱人、推己及人。
+      - key: B.righteousness
+        label: 重义
+        gloss: 见义勇为、舍生取义。
+      - key: B.propriety
+        label: 守礼
+        gloss: 知礼守节、温良恭俭让。
+      - key: B.wisdom
+        label: 明智
+        gloss: 明辨是非、慎思笃行。
+      - key: B.trustworthiness
+        label: 诚信
+        gloss: 言必信、行必果。
+      - key: B.filial_piety
+        label: 孝悌
+        gloss: 孝敬父母、友爱兄弟。
+      - key: B.loyalty
+        label: 忠诚
+        gloss: 忠于国家、忠于职责。
+      - key: B.diligence_thrift
+        label: 勤俭
+        gloss: 勤劳节俭、艰苦奋斗。
+
+  C:
+    name: 现代公民素养
+    weight: 0.8
+    items:
+      - key: C.law_abiding
+        label: 守法
+        gloss: 遵守宪法和法律法规。
+      - key: C.public_order
+        label: 公德
+        gloss: 遵守社会公德、公共秩序。
+      - key: C.environmental
+        label: 环保
+        gloss: 保护生态环境、绿色生活。
+      - key: C.scientific_spirit
+        label: 科学精神
+        gloss: 尊重事实、反对伪科学。
+      - key: C.privacy_protection
+        label: 隐私保护
+        gloss: 尊重并保护个人信息与隐私。
+      - key: C.anti_discrimination
+        label: 反歧视
+        gloss: 反对基于性别/民族/地域等的歧视。
+
+  D:
+    name: 领域专业伦理
+    weight: 0.7
+    domains:
+      academic:
+        label: 学术伦理
+        items:
+          - key: D.academic.honesty
+            label: 学术诚信
+            gloss: 拒绝抄袭、数据造假、不当署名。
+          - key: D.academic.peer_respect
+            label: 同行尊重
+            gloss: 公正评议、不打压同行。
+          - key: D.academic.open_science
+            label: 开放科学
+            gloss: 数据共享、可复现研究。
+      medical:
+        label: 医疗伦理
+        items:
+          - key: D.medical.beneficence
+            label: 患者利益优先
+            gloss: 以患者利益为首要考量。
+          - key: D.medical.informed_consent
+            label: 知情同意
+            gloss: 充分告知风险并取得同意。
+          - key: D.medical.confidentiality
+            label: 病患保密
+            gloss: 严守患者隐私和医疗信息。
+      business:
+        label: 商业伦理
+        items:
+          - key: D.business.fair_competition
+            label: 公平竞争
+            gloss: 反对垄断、不正当竞争。
+          - key: D.business.consumer_rights
+            label: 消费者权益
+            gloss: 保障知情权、选择权、安全权。
+          - key: D.business.anti_corruption
+            label: 反腐倡廉
+            gloss: 拒绝行贿受贿、利益输送。
+      education:
+        label: 教育伦理
+        items:
+          - key: D.education.equity
+            label: 教育公平
+            gloss: 不歧视、不区别对待学生。
+          - key: D.education.no_violence
+            label: 反对体罚
+            gloss: 禁止体罚和精神侮辱。
+          - key: D.education.guidance
+            label: 正向引导
+            gloss: 引导学生形成正确价值观。
+      tech:
+        label: 科技伦理
+        items:
+          - key: D.tech.safety
+            label: 技术安全
+            gloss: 保障用户安全、防范滥用。
+          - key: D.tech.responsibility
+            label: 技术责任
+            gloss: 对技术后果负责、可追溯。
+          - key: D.tech.fairness
+            label: 算法公平
+            gloss: 防止算法歧视和偏见放大。
+
+defaults:
+  # Soft hints injected into prompts when no explicit anchor is selected.
+  hints:
+    cultural_fidelity:
+      - 优先关注传统文化、礼仪、典籍、人物事迹中的价值表达
+      - 区分"客观文化事实"与"主观价值评价"
+    ethics_compliance:
+      - 优先关注法律、职业规范、公民行为中的合规与失范
+      - 高/低对比应清晰呈现行为后果
+  # When LLM cannot route a fact to either dimension, drop it (no fallback).
+  uncertain_strategy: skip

@@ -66,7 +66,7 @@ class BenchmarkQASkill(DocumentSkillMixin):
 
     async def _generate_triplets(self, llm, doc: SourceDocument, n: int) -> list[dict]:
         """调用 LLM 生成 n 组三元组"""
-        prompt = GENERATION_PROMPT.format(
+        prompt = GENERATION_PROMPT.format( # User Prompt：塞文档标题+正文（截取前 3000 字）+ 输出 JSON 格式要求
             n=n,
             title=doc.title,
             content=doc.content[:3000],

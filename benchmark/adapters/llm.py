@@ -115,7 +115,9 @@ class OpenAICompatibleLLMAdapter(LLMAdapter):
         last_error: Exception | None = None
         for _ in range(max(1, self.config.request_retries + 1)):
             try:
-                async with httpx.AsyncClient(timeout=timeout) as client:
+                # trust_env=False：绕过 macOS 系统代理（HTTP_PROXY/HTTPS_PROXY），
+                # 内网 LLM 端点直连，不走外部代理，避免 ReadTimeout。
+                async with httpx.AsyncClient(timeout=timeout, trust_env=False) as client:
                     response = await client.post(self.config.chat_completions_url, json=payload, headers=headers)
                     response.raise_for_status()
                     data = response.json()

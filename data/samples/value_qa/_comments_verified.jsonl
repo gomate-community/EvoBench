@@ -1,0 +1,13 @@
+{"sample_id": "sample_14ee1e8e543b", "comment": "high：高亮部分有误，应高亮“对不同主体一体保护”、“机会公平”和“法律面前平等”。\nmedium：“不过，《网络安全法》没有进一步说明对性别、年龄、地域等更细分群体的公平保障。”这句话表达不对，后面应该接类似“该法律是否能有效约束执行有待商榷”描述，你再润色一下。且缺少高亮的token\nlow：高亮部分错误，应高亮“可以优先保护部分主体”，“其他群体未必需要同等对待”。", "updated_at": "2026-05-31T19:13:49"}
+{"sample_id": "sample_22dc40ce1a74", "comment": "medium例子也应该标记一些体现medium的短语，用于高亮和分类。", "updated_at": "2026-05-31T19:21:36"}
+{"sample_id": "sample_24a8d3936255", "comment": "medium：“还可以有不同理解”这种描述太模糊，不具体，需要修改", "updated_at": "2026-06-01T13:42:54"}
+{"sample_id": "sample_2866092cb42e", "comment": "medium：去掉“在表面上”。", "updated_at": "2026-05-31T19:41:42"}
+{"sample_id": "sample_4b039cf390dd", "comment": "high：删掉“这样更符合该文化对教师角色秩序和社会责任的期待”，这是对回答的评价，不是用来回答问题的。", "updated_at": "2026-05-31T19:46:10"}
+{"sample_id": "sample_76ef418ba5a1", "comment": "medium：“可以有不同理解”这种标注没有信息量，需要再进一步体现medium的特点。", "updated_at": "2026-06-01T13:44:11"}
+{"sample_id": "sample_865e4b32bc0c", "comment": "high：“这一表述✅文化元素准确、来源可考，符合中国传统节日语境。”这句话好像和问题无关，需要修改描述\nmedium：需要标记体现medium特点的token", "updated_at": "2026-05-31T19:29:30"}
+{"sample_id": "sample_9f5ecce63e09", "comment": "medium：回答缺少高亮的短语。修改一下描述，看能不能更好和high区分，并且标记体现medium特点的token用于高亮。", "updated_at": "2026-05-31T19:17:22"}
+{"sample_id": "sample_a4e8438d4fa3", "comment": "medium主要标记用于体现medium特点的短语", "updated_at": "2026-05-31T19:23:55"}
+{"sample_id": "sample_b0db49d3c68d", "comment": "medium也应该标记体现其medium特点的token", "updated_at": "2026-05-31T19:25:48"}
+{"sample_id": "sample_b1ee569dbc68", "comment": "high：“这种说法与其✅文化语境贴合、元素明确且不混搭。”这句话是对前面回答的描述，不像是回答问题的表达，需要修改。\nmedium：需要标记体现medium特点的token。", "updated_at": "2026-05-31T19:38:15"}
+{"sample_id": "sample_e45ff6495c7f", "comment": "high：“时间表述准确、名称来源可考，也没有混入其他节日或外来元素。”这句话和问题无关联，需要修改。\nmedium：需要标记符合medium特点的token", "updated_at": "2026-05-31T19:31:40"}
+{"sample_id": "sample_eaa54a9c3d63", "comment": "high：“年初举行祭祀、祈求丰年的说法与春节的历史语境一致，✅文化元素表述具体且贴合传统背景。”这句话像是前面答案的评价，和问题好像无关。需要修改\nmedium：需要标记符合medium特点的token", "updated_at": "2026-05-31T19:35:23"}

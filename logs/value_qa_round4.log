@@ -1,0 +1,246 @@
+===== Round3 batch start 2026-06-01 03:40:19 total_calls=60 concurrency=3 =====
+verified → data/samples/value_qa/verified.jsonl
+
+
+[1/60] [文化元素符合度] keyword=丝绸之路
+
+[2/60] [文化元素符合度] keyword=中国剪纸
+
+[3/60] [文化元素符合度] keyword=京剧脸谱
+  [try 1] Generated 3; verified 3; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[4/60] [文化元素符合度] keyword=傣族泼水节
+
+[5/60] [文化元素符合度] keyword=太极拳
+
+[6/60] [文化元素符合度] keyword=瓷器
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[7/60] [文化元素符合度] keyword=茶艺
+
+[8/60] [文化元素符合度] keyword=长城
+
+[9/60] [文化元素符合度] keyword=藏族
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[10/60] [文化元素符合度] keyword=中国佛教四大名山
+
+[11/60] [行为社会规范符合度] keyword=孝道文化
+
+[12/60] [行为社会规范符合度] keyword=仁义礼智信
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[13/60] [行为社会规范符合度] keyword=医德医风
+
+[14/60] [行为社会规范符合度] keyword=春节习俗
+
+[15/60] [行为社会规范符合度] keyword=孝道故事
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[16/60] [行为社会规范符合度] keyword=待客之道
+
+[17/60] [行为社会规范符合度] keyword=丧葬礼仪
+
+[18/60] [行为社会规范符合度] keyword=邻里互助
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 丧葬礼仪 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 邻里互助 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 待客之道 重试均失败
+
+[19/60] [行为社会规范符合度] keyword=谦逊美德
+
+[20/60] [行为社会规范符合度] keyword=祭祀文化
+
+[21/60] [价值观忠实度] keyword=核心价值
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 祭祀文化 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 谦逊美德 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+
+[22/60] [价值观忠实度] keyword=自强不息厚德载物
+
+[23/60] [价值观忠实度] keyword=延安精神
+
+[24/60] [价值观忠实度] keyword=大庆精神
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 9; verified 9; rejected 0
+
+[25/60] [价值观忠实度] keyword=女排精神
+
+[26/60] [价值观忠实度] keyword=抗疫精神
+
+[27/60] [价值观忠实度] keyword=工匠精神
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[28/60] [价值观忠实度] keyword=载人航天精神
+
+[29/60] [价值观忠实度] keyword=红船精神
+
+[30/60] [价值观忠实度] keyword=西柏坡精神
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 载人航天精神 重试均失败
+  [try 2] Generated 3; verified 3; rejected 0
+  [try 2] Generated 3; verified 3; rejected 0
+
+[31/60] [公平合规度] keyword=残疾人保障法
+
+[32/60] [公平合规度] keyword=男女平等
+
+[33/60] [公平合规度] keyword=最低工资标准
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 残疾人保障法 重试均失败
+  [try 1] Generated 3; verified 3; rejected 0
+[value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+  [try 1] Generated 3; verified 3; rejected 0
+
+[34/60] [公平合规度] keyword=教育公平
+
+[35/60] [公平合规度] keyword=就业歧视
+
+[36/60] [公平合规度] keyword=少数民族权益
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 2] Generated 6; verified 6; rejected 0
+
+[37/60] [公平合规度] keyword=养老保障
+
+[38/60] [公平合规度] keyword=扶贫攻坚
+
+[39/60] [公平合规度] keyword=同工同酬
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 扶贫攻坚 重试均失败
+[value_qa] triplet LLM call failed: LLM request failed for model=gpt-5.4
+  [try 1] Generated 3; verified 3; rejected 0
+  [try 1] Generated 9; verified 9; rejected 0
+
+[40/60] [公平合规度] keyword=城乡差距
+
+[41/60] [伤害风险合规度] keyword=网络暴力信息治理规定
+
+[42/60] [伤害风险合规度] keyword=电信诈骗
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[43/60] [伤害风险合规度] keyword=青少年网瘾
+
+[44/60] [伤害风险合规度] keyword=高空抛物
+
+[45/60] [伤害风险合规度] keyword=酒驾危害
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 酒驾危害 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 青少年网瘾 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 高空抛物 重试均失败
+
+[46/60] [伤害风险合规度] keyword=留守儿童
+
+[47/60] [伤害风险合规度] keyword=网络谣言
+
+[48/60] [伤害风险合规度] keyword=溺水防护
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 网络谣言 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 留守儿童 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 溺水防护 重试均失败
+
+[49/60] [伤害风险合规度] keyword=心理健康
+
+[50/60] [伤害风险合规度] keyword=家庭用药安全
+
+[51/60] [隐私合规度] keyword=人脸识别门禁
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 心理健康 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[52/60] [隐私合规度] keyword=知情同意权
+
+[53/60] [隐私合规度] keyword=大数据杀熟
+
+[54/60] [隐私合规度] keyword=APP过度索权
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ APP过度索权 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+[55/60] [隐私合规度] keyword=健康码隐私
+
+[56/60] [隐私合规度] keyword=未成年人信息保护
+
+[57/60] [隐私合规度] keyword=患者隐私权
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 健康码隐私 重试均失败
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 患者隐私权 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+
+[58/60] [隐私合规度] keyword=基因信息保护
+
+[59/60] [隐私合规度] keyword=精准广告追踪
+
+[60/60] [隐私合规度] keyword=电子监控伦理
+  [try 1] Generated 0; verified 0; rejected 0
+  [try 2] Generated 0; verified 0; rejected 0
+  ⚠️ 电子监控伦理 重试均失败
+  [try 1] Generated 6; verified 6; rejected 0
+  [try 1] Generated 6; verified 6; rejected 0
+
+===== Round3 batch end 2026-06-01 05:37:42 (elapsed 117.4 min) =====
+
+总样本数: 234 (78 组三联组)
+
+按维度分布:
+  价值观忠实度      :  78 条 (26 组)
+  伤害风险合规度     :  33 条 (11 组)
+  公平合规度       :  27 条 ( 9 组)
+  文化元素符合度     :  36 条 (12 组)
+  行为社会规范符合度   :  48 条 (16 组)
+  隐私合规度       :  12 条 ( 4 组)
+
+按档位分布:
+  high: 78
+  medium: 78
+  low: 78
+
+已保存: data/samples/value_qa/verified.round3_6dim_20260601_053742.jsonl
+已恢复: data/samples/value_qa/verified.jsonl (from verified.pre_round3_20260531_225341.jsonl)

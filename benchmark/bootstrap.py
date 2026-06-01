@@ -25,6 +25,8 @@ from benchmark.storage import db_patches, repository_patches
 from benchmark.agents.skills.benchmark_qa.schema import BENCHMARK_QA_OUTPUT_SCHEMA
 from benchmark.agents.skills.benchmark_qa.skill import BenchmarkQASkill
 from benchmark.agents.skills.doc_to_qa_llm.skill import DocumentToQALLMSkill
+from benchmark.agents.skills.value_qa.schema import VALUE_QA_OUTPUT_SCHEMA
+from benchmark.agents.skills.value_qa.skill import ValueQASkill
 from benchmark.agents.skills.registry import SkillRegistry
 from benchmark.schemas import SkillDefinition, TaskType
 
@@ -32,15 +34,17 @@ _installed = False
 
 
 def _register_skills() -> None:
-    """把 benchmark_qa 注册进 SkillRegistry，并把 doc_to_qa 工厂替换为 LLM 子类版本。"""
-    # 1) 工厂表：新增 benchmark_qa；把 doc_to_qa 默认替换为 LLM 子类。
+    """把 benchmark_qa / value_qa 注册进 SkillRegistry，并把 doc_to_qa 工厂替换为 LLM 子类版本。"""
+    # 1) 工厂表：新增 benchmark_qa / value_qa；把 doc_to_qa 默认替换为 LLM 子类。
     SkillRegistry._factories["benchmark_qa"] = BenchmarkQASkill
     SkillRegistry._factories["doc_to_qa"] = DocumentToQALLMSkill
+    SkillRegistry._factories["value_qa"] = ValueQASkill
 
-    # 2) output_schema 表：新增 benchmark_qa。
+    # 2) output_schema 表：新增 benchmark_qa / value_qa。
     SkillRegistry._builtin_output_schemas["benchmark_qa"] = BENCHMARK_QA_OUTPUT_SCHEMA
+    SkillRegistry._builtin_output_schemas["value_qa"] = VALUE_QA_OUTPUT_SCHEMA
 
-    # 3) default_definitions：包裹原 classmethod，追加 benchmark_qa 定义。
+    # 3) default_definitions：包裹原 classmethod，追加 benchmark_qa / value_qa 定义。
     if getattr(SkillRegistry.default_definitions, "__wrapped_by_bootstrap__", False):
         return
 
@@ -48,21 +52,41 @@ def _register_skills() -> None:
 
     def _patched_default_definitions(cls) -> list[SkillDefinition]:
         defs = list(_orig_default_definitions.__func__(cls))
-        # 避免重复追加
-        if any(d.skill_id == "benchmark_qa" for d in defs):
-            return defs
-        defs.append(
-            SkillDefinition(
-                skill_id="benchmark_qa",
-                name="Benchmark QA (Normal + Counterfactual + Risk)",
-                task_type=TaskType.document_to_xy,
-                description="Generate triplet samples: normal fact QA, counterfactual QA, and risk-annotated statement.",
-                output_schema=BENCHMARK_QA_OUTPUT_SCHEMA,
-                quality_rules={"min_evidence_coverage": 0.3, "human_review_required": True},
-                config={"groups_per_doc": 2},
-                tags=["benchmark_qa", "counterfactual", "risk"],
+        existing = {d.skill_id for d in defs}
+        if "benchmark_qa" not in existing:
+            defs.append(
+                SkillDefinition(
+                    skill_id="benchmark_qa",
+                    name="Benchmark QA (Normal + Counterfactual + Risk)",
+                    task_type=TaskType.document_to_xy,
+                    description="Generate triplet samples: normal fact QA, counterfactual QA, and risk-annotated statement.",
+                    output_schema=BENCHMARK_QA_OUTPUT_SCHEMA,
+                    quality_rules={"min_evidence_coverage": 0.3, "human_review_required": True},
+                    config={"groups_per_doc": 2},
+                    tags=["benchmark_qa", "counterfactual", "risk"],
+                )
             )
-        )
+        if "value_qa" not in existing:
+            defs.append(
+                SkillDefinition(
+                    skill_id="value_qa",
+                    name="Value-Aligned QA (Cultural Fidelity + Ethics Compliance)",
+                    task_type=TaskType.document_to_xy,
+                    description=(
+                        "Generate high/medium/low value-tier QA samples under "
+                        "cultural_fidelity or ethics_compliance dimension, anchored "
+                        "to the 4-layer mainstream-value taxonomy."
+                    ),
+                    output_schema=VALUE_QA_OUTPUT_SCHEMA,
+                    quality_rules={"min_evidence_coverage": 0.3, "human_review_required": True},
+                    config={
+                        "facts_per_doc": 2,
+                        "taxonomy_path": "configs/value_taxonomy.yaml",
+                        "keywords_path": "configs/value_qa_keywords.yaml",
+                    },
+                    tags=["value_qa", "cultural_fidelity", "ethics_compliance"],
+                )
+            )
         return defs
 
     _patched_default_definitions.__wrapped_by_bootstrap__ = True  # type: ignore[attr-defined]
